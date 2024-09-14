@@ -8,14 +8,15 @@
 </head>
 <body>
     {% if user.is_authenticated %}
+    <!-- navbar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">TaskHive</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">TaskHive</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">Home</a>
               </li>
@@ -70,14 +71,45 @@
           {% endfor %}
     </div>
       {% endif %}
-            <p>Welcome, {{ user.username }}! You are logged in.</p>
-            <div class="container mx-7 my-4 border border-success border-opacity-25 rounded p-4 col-md-6">
-                <div class="card-body">
-                  <h5 class="card-title">Create a new task</h5>
-                  <p class="card-text">Set your task in motion with clarity and purpose. Add supporting details below to guide your journey to success.</p>
-                  <a href="{% url 'task-create' %}" class="btn btn-primary">click here</a>
-                </div>
-              </div>
+<!-- Create task form -->
+ <div class="container mx-7 my-4 border border-success border-opacity-25 rounded p-4">
+  <h3 class="navbar-brand">Create a new task</h3>
+  <form class="row g-3" method="post" action="{% url 'task-create' %}">
+    {% csrf_token %}
+    <div class="col-md-6">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" id="title" name="title">
+    </div>
+     <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea class="form-control" id="description" rows="3" name="description"></textarea>
+    </div>
+    <div class="col-md-4">
+      <label for="status" class="form-label">Status</label>
+      <select id="status" class="form-select" name="status">
+        <option selected>To do</option>
+        <option>Building</option>
+        <option>Completed</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="inputState" class="form-label">Priority</label>
+      <select id="inputState" class="form-select" name="priority">
+        <option selected>High</option>
+        <option>Medium</option>
+        <option>Low</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="exp_end_date" class="form-label">Expected completion date</label>
+      <input type="datetime-local" class="form-control" id="exp_end_date" name="exp_end_date">
+    </div>
+     <div class="col-12">
+       <button type="submit" class="btn btn-primary">Submit</button>
+     </div>
+   </form>
+ </div>
+<!-- if not login condtiion started -->
 
         {% else %}
     <div class="container mx-7 my-4 border border-success border-opacity-25 rounded p-4">
