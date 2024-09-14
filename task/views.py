@@ -6,6 +6,12 @@ from django.views.decorators.csrf import csrf_protect
 
 # Create your views here.
 @csrf_protect
+def mytask(request):
+    creator = User.objects.get(username=request.user.username)
+    tasks=Task.objects.filter(creator=creator)
+    return render(request,'mytask.html',{'tasks':tasks})
+
+@csrf_protect
 def task_create(request):
     if request.user.is_authenticated:
         if request.method=='POST':

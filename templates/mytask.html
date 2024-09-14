@@ -18,10 +18,10 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link" href="{% url 'homepage' %}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'my-task' %}">My Tasks</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'my-task' %}">My Tasks</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -80,14 +80,92 @@
           {% endfor %}
     </div>
       {% endif %}
-            <p>Welcome, {{ user.username }}! You are logged in.</p>
-            <div class="container mx-7 my-4 border border-success border-opacity-25 rounded p-4 col-md-6">
+      <div class="d-flex flex-row">
+        <div class="container my-2 w-25 bg-info">
+          <h5>To DO</h5>
+          <ul class="list-group">
+            {% for item in tasks %}
+            {% if item.status == 'To do' %}
+            <li class="list-group-item my-2">
+              <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">Create a new task</h5>
-                  <p class="card-text">Set your task in motion with clarity and purpose. Add supporting details below to guide your journey to success.</p>
-                  <a href="{% url 'task-create' %}" class="btn btn-primary">click here</a>
+                  <h5 class="card-title">{{item.title}}</h5>
+                  <p class="card-text">{{item.description}}</p>
+                  <p class="card-text">Priority : <span class="badge text-bg-danger">{{item.priority}}</span></p>
+                  <p class="card-text">Status : <span class="badge text-bg-info">{{item.status}}</span></p>
+                  <p class="card-text">Expected competion date: {{item.exp_end_date}}</p>
+                  <a href="#" class="btn btn-primary">View more</a>
                 </div>
               </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="container my-2 w-25 bg-warning">
+          <h5>Ongoing</h5>
+          <ul class="list-group">
+            {% for item in tasks %}
+            {% if item.status == 'Ongoing' %}
+            <li class="list-group-item my-2">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{item.title}}</h5>
+                  <p class="card-text">{{item.description}}</p>
+                  <p class="card-text">Priority : <span class="badge text-bg-danger">{{item.priority}}</span></p>
+                  <p class="card-text">Status : <span class="badge text-bg-warning">{{item.status}}</span></p>
+                  <p class="card-text">Expected competion date: {{item.exp_end_date}}</p>
+                  <a href="#" class="btn btn-primary">View more</a>
+                </div>
+              </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="container my-2 w-25 bg-success">
+          <h5>Completed</h5>
+          <ul class="list-group">
+            {% for item in tasks %}
+            {% if item.status == 'Completed' %}
+            <li class="list-group-item my-2">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{item.title}}</h5>
+                  <p class="card-text">{{item.description}}</p>
+                  <p class="card-text">Priority : <span class="badge text-bg-danger">{{item.priority}}</span></p>
+                  <p class="card-text">Status : <span class="badge text-bg-success">{{item.status}}</span></p>
+                  <p class="card-text">Expected competion date: {{item.exp_end_date}}</p>
+                  <a href="#" class="btn btn-primary">View more</a>
+                </div>
+              </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="container my-2 w-25 bg-secondary">
+          <h5>Dropped</h5>
+          <ul class="list-group">
+            {% for item in tasks %}
+            {% if item.status == 'Droped' %}
+            <li class="list-group-item my-2">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{item.title}}</h5>
+                  <p class="card-text">{{item.description}}</p>
+                  <p class="card-text">Priority : <span class="badge text-bg-danger">{{item.priority}}</span></p>
+                  <p class="card-text">Status : <span class="badge text-bg-secondary">{{item.status}}</span></p>
+                  <p class="card-text">Expected competion date: {{item.exp_end_date}}</p>
+                  <a href="#" class="btn btn-primary">View more</a>
+                </div>
+              </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
 
         {% else %}
     <div class="container mx-7 my-4 border border-success border-opacity-25 rounded p-4">
