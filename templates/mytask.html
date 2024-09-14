@@ -81,17 +81,23 @@
     </div>
       {% endif %}
       <div class="d-flex flex-row">
-        <div class="container my-2 w-25 bg-info">
-          <h5>To DO</h5>
-          <ul class="list-group">
+        <div class="container my-2 w-25 mx-2" style="background-color: rgba(0, 0, 255, 0.25);">
+          <h5 class="text-center my-2">To DO</h5>
             {% for item in tasks %}
             {% if item.status == 'To do' %}
-            <li class="list-group-item my-2">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{item.title}}</h5>
+            <li class="list-group-item my-2 transparent-bg">
+              <div class="card transparent-bg">
+                <div class="card-body rounded-2" style="background-color: rgba(0, 0, 255, 0.15);">
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <h5 class="card-title">{{item.title}}</h5>
+                      </div>
+                      <div>
+                        <span class="badge text-bg-{{item.task_status_tag}}">{{item.task_status}}</span>
+                      </div>
+                  </div>
                   <p class="card-text">{{item.description}}</p>
-                  <p class="card-text">Priority : <span class="badge text-bg-danger">{{item.priority}}</span></p>
+                  <p class="card-text">Priority : <span class="badge text-bg-{{item.priority_tag}}">{{item.priority}}</span></p>
                   <p class="card-text">Status : <span class="badge text-bg-info">{{item.status}}</span></p>
                   <p class="card-text">Expected competion date: {{item.exp_end_date}}</p>
                   <a href="#" class="btn btn-primary">View more</a>
@@ -100,40 +106,52 @@
             </li>
             {% endif %}
             {% endfor %}
-          </ul>
         </div>
-        <div class="container my-2 w-25 bg-warning">
-          <h5>Ongoing</h5>
-          <ul class="list-group">
+        <div class="container my-2 w-25 mx-2" style="background-color: rgba(255, 255, 0, 0.25);">
+          <h5 class="text-center my-2">Ongoing</h5>
             {% for item in tasks %}
             {% if item.status == 'Ongoing' %}
             <li class="list-group-item my-2">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{item.title}}</h5>
+              <div class="card transparent-bg">
+                <div class="card-body" style="background-color: rgba(255, 255, 0, 0.15);">
+                  <div class="d-flex justify-content-between">
+
+                    <div>
+                      <h5 class="card-title">{{item.title}}</h5>
+                    </div>
+                    <div>
+                      <span class="badge text-bg-{{item.task_status_tag}}">{{item.task_status}}</span>
+                    </div>
+                  </div>
                   <p class="card-text">{{item.description}}</p>
-                  <p class="card-text">Priority : <span class="badge text-bg-danger">{{item.priority}}</span></p>
+                  <p class="card-text">Priority : <span class="badge text-bg-{{item.priority_tag}}">{{item.priority}}</span></p>
                   <p class="card-text">Status : <span class="badge text-bg-warning">{{item.status}}</span></p>
                   <p class="card-text">Expected competion date: {{item.exp_end_date}}</p>
                   <a href="#" class="btn btn-primary">View more</a>
                 </div>
               </div>
-            </li>
             {% endif %}
             {% endfor %}
           </ul>
         </div>
-        <div class="container my-2 w-25 bg-success">
-          <h5>Completed</h5>
-          <ul class="list-group">
+        <div class="container my-2 w-25 mx-2" style="background-color: rgba(0, 128, 0, 0.25);">
+          <h5 class="text-center my-2">Completed</h5>
             {% for item in tasks %}
             {% if item.status == 'Completed' %}
-            <li class="list-group-item my-2">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{item.title}}</h5>
+            <li class="list-group-item my-2 transparent-bg">
+              <div class="card transparent-bg">
+                <div class="card-body" style="background-color: rgba(0, 128, 0, 0.15);">
+                  <div class="d-flex justify-content-between">
+
+                    <div>
+                      <h5 class="card-title">{{item.title}}</h5>
+                    </div>
+                    <div>
+                      <span class="badge text-bg-{{item.task_status_tag}}">{{item.task_status}}</span>
+                    </div>
+                  </div>
                   <p class="card-text">{{item.description}}</p>
-                  <p class="card-text">Priority : <span class="badge text-bg-danger">{{item.priority}}</span></p>
+                  <p class="card-text">Priority : <span class="badge text-bg-{{item.priority_tag}}">{{item.priority}}</span></p>
                   <p class="card-text">Status : <span class="badge text-bg-success">{{item.status}}</span></p>
                   <p class="card-text">Expected competion date: {{item.exp_end_date}}</p>
                   <a href="#" class="btn btn-primary">View more</a>
@@ -142,19 +160,25 @@
             </li>
             {% endif %}
             {% endfor %}
-          </ul>
         </div>
-        <div class="container my-2 w-25 bg-secondary">
-          <h5>Dropped</h5>
-          <ul class="list-group">
+        <div class="container my-2 w-25 mx-2" style="background-color: rgba(128, 128, 128, 0.25);">
+          <h5 class="text-center my-2">Dropped</h5>
             {% for item in tasks %}
             {% if item.status == 'Droped' %}
             <li class="list-group-item my-2">
               <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{item.title}}</h5>
+                <div class="card-body" style="background-color: rgba(128, 128, 128, 0.15);">
+                  <div class="d-flex justify-content-between">
+
+                    <div>
+                      <h5 class="card-title">{{item.title}}</h5>
+                    </div>
+                    <div>
+                      <span class="badge text-bg-{{item.task_status_tag}}">{{item.task_status}}</span>
+                    </div>
+                  </div>
                   <p class="card-text">{{item.description}}</p>
-                  <p class="card-text">Priority : <span class="badge text-bg-danger">{{item.priority}}</span></p>
+                  <p class="card-text">Priority : <span class="badge text-bg-{{item.priority_tag}}">{{item.priority}}</span></p>
                   <p class="card-text">Status : <span class="badge text-bg-secondary">{{item.status}}</span></p>
                   <p class="card-text">Expected competion date: {{item.exp_end_date}}</p>
                   <a href="#" class="btn btn-primary">View more</a>
@@ -163,7 +187,6 @@
             </li>
             {% endif %}
             {% endfor %}
-          </ul>
         </div>
       </div>
 
