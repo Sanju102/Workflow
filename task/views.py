@@ -98,3 +98,25 @@ def delete_task(request, pk):
     task = get_object_or_404(Task, pk=pk)
     task.delete()
     return redirect('my-task')
+
+@csrf_protect   
+def update_task(request, pk):
+    if request.user.is_authenticated:
+        task = Task.objects.get(pk=pk)
+        if request.method=='POST':
+            now = timezone.now()
+            task.creator = User.objects.get(username=request.user.username)
+            task.assign_to = [request.user.username]
+            task.status = request.POST.get('status')
+            if task.status=='Completed':
+                task.completed_on=now
+            task.priority = request.POST.get('priority')
+            task.title = request.POST.get('title')
+            task.description = request.POST.get('description')
+            task.exp_end_date = request.POST.get('exp_end_date')
+            task.save()
+            messages.success(request,"Task updated succcesfully !")
+            return redirect('my-task')
+        
+          # Get all users
+        return render(request, 'update_task.html', {'task': task})

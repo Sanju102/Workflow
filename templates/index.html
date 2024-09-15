@@ -81,13 +81,15 @@
     </div>
       {% endif %}
             <p>Welcome, {{ user.username }}! You are logged in.</p>
-            <div class="container mx-7 my-4 border border-success border-opacity-25 rounded p-4 col-md-6">
-                <div class="card-body">
-                  <h5 class="card-title">Create a new task</h5>
-                  <p class="card-text">Set your task in motion with clarity and purpose. Add supporting details below to guide your journey to success.</p>
-                  <a href="{% url 'task-create' %}" class="btn btn-primary">click here</a>
+            <div>
+              <div class="container mx-7 my-4 border border-success border-opacity-25 rounded p-4 col-md-6 bg-light">
+                  <div class="card-body">
+                    <h5 class="card-title">Create a new task</h5>
+                    <p class="card-text">Set your task in motion with clarity and purpose. Add supporting details below to guide your journey to success.</p>
+                    <a href="{% url 'task-create' %}" class="btn btn-primary">click here</a>
+                  </div>
                 </div>
-              </div>
+            </div>
 
         {% else %}
     <div class="container mx-7 my-4 border border-success border-opacity-25 rounded p-4">

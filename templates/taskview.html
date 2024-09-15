@@ -86,7 +86,7 @@
                 <h1>{{ task.title }}</h1>
               </div>
               <div>
-                <a href="#" class="badge text-bg-light">Edit</a>
+                <a href="{% url 'update-task' task.id %}" class="badge text-bg-light">Edit</a>
                 <a href="{% url 'delete-task' task.id %}" class="badge text-bg-light">Delete</a>
               </div>
             </div>
