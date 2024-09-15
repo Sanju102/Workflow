@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .models import Task
 from django.contrib import messages
@@ -34,6 +34,38 @@ def mytask(request):
 
     return redirect('login')
 
+def taskdetails(request, pk):
+    if request.user.is_authenticated:
+        # Use get_object_or_404 to fetch the task or return a 404 error if it doesn't exist
+        task = get_object_or_404(Task, pk=pk)
+        now = timezone.now()
+
+        if task.exp_end_date and task.exp_end_date < now:
+            task.task_status = 'Delayed'
+            task.task_status_tag="danger"
+        else:
+            task.task_status = 'On Time'
+            task.task_status_tag="success"
+        
+        # Task priority tag based on the priority level
+        if task.priority == 'High':
+            task.priority_tag = 'danger'  # Bootstrap danger (red)
+        elif task.priority == 'Medium':
+            task.priority_tag = 'warning'  # Bootstrap warning (yellow)
+        else:
+            task.priority_tag = 'primary'  # Bootstrap primary (blue)
+        # Task priority tag based on the priority level
+        if task.status == 'Droped':
+            task.status_tag = 'danger'  # Bootstrap danger (red)
+        elif task.status == 'Ongoing':
+            task.status_tag = 'warning'  # Bootstrap warning (yellow)
+        elif task.status == 'Completed':
+            task.status_tag = 'success'  # Bootstrap warning (yellow)
+        else:
+            task.status_tag = 'primary'  # Bootstrap primary (blue)
+        return render(request, 'taskview.html', {'task': task})
+    return redirect('login')
+
 @csrf_protect
 def task_create(request):
     if request.user.is_authenticated:
@@ -60,3 +92,9 @@ def task_create(request):
         
         users = User.objects.all()  # Get all users
         return render(request, 'create_task.html', {'users': users})
+
+@csrf_protect   
+def delete_task(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+    task.delete()
+    return redirect('my-task')

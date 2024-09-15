@@ -81,7 +81,7 @@
     </div>
       {% endif %}
       <div class="d-flex flex-row">
-        <div class="container my-2 w-25 mx-2" style="background-color: rgba(0, 0, 255, 0.25);">
+        <div class="container my-2 w-25 mx-2" style="background-color: rgba(0, 0, 255, 0.05);">
           <h5 class="text-center my-2">To DO</h5>
             {% for item in tasks %}
             {% if item.status == 'To do' %}
@@ -100,14 +100,15 @@
                   <p class="card-text">Priority : <span class="badge text-bg-{{item.priority_tag}}">{{item.priority}}</span></p>
                   <p class="card-text">Status : <span class="badge text-bg-info">{{item.status}}</span></p>
                   <p class="card-text">Expected competion date: {{item.exp_end_date}}</p>
-                  <a href="#" class="btn btn-primary">View more</a>
+                  
+                  <a href="{% url 'task-detail' item.pk %}" class="btn btn-primary">View more</a>
                 </div>
               </div>
             </li>
             {% endif %}
             {% endfor %}
         </div>
-        <div class="container my-2 w-25 mx-2" style="background-color: rgba(255, 255, 0, 0.25);">
+        <div class="container my-2 w-25 mx-2" style="background-color: rgba(255, 255, 0, 0.05);">
           <h5 class="text-center my-2">Ongoing</h5>
             {% for item in tasks %}
             {% if item.status == 'Ongoing' %}
@@ -127,14 +128,14 @@
                   <p class="card-text">Priority : <span class="badge text-bg-{{item.priority_tag}}">{{item.priority}}</span></p>
                   <p class="card-text">Status : <span class="badge text-bg-warning">{{item.status}}</span></p>
                   <p class="card-text">Expected competion date: {{item.exp_end_date}}</p>
-                  <a href="#" class="btn btn-primary">View more</a>
+                  <a href="{% url 'task-detail' item.pk %}" class="btn btn-primary">View more</a>
                 </div>
               </div>
             {% endif %}
             {% endfor %}
           </ul>
         </div>
-        <div class="container my-2 w-25 mx-2" style="background-color: rgba(0, 128, 0, 0.25);">
+        <div class="container my-2 w-25 mx-2" style="background-color: rgba(0, 128, 0, 0.05);">
           <h5 class="text-center my-2">Completed</h5>
             {% for item in tasks %}
             {% if item.status == 'Completed' %}
@@ -154,14 +155,14 @@
                   <p class="card-text">Priority : <span class="badge text-bg-{{item.priority_tag}}">{{item.priority}}</span></p>
                   <p class="card-text">Status : <span class="badge text-bg-success">{{item.status}}</span></p>
                   <p class="card-text">Expected competion date: {{item.exp_end_date}}</p>
-                  <a href="#" class="btn btn-primary">View more</a>
+                  <a href="{% url 'task-detail' item.pk %}" class="btn btn-primary">View more</a>
                 </div>
               </div>
             </li>
             {% endif %}
             {% endfor %}
         </div>
-        <div class="container my-2 w-25 mx-2" style="background-color: rgba(128, 128, 128, 0.25);">
+        <div class="container my-2 w-25 mx-2" style="background-color: rgba(128, 128, 128, 0.05);">
           <h5 class="text-center my-2">Dropped</h5>
             {% for item in tasks %}
             {% if item.status == 'Droped' %}
@@ -181,7 +182,7 @@
                   <p class="card-text">Priority : <span class="badge text-bg-{{item.priority_tag}}">{{item.priority}}</span></p>
                   <p class="card-text">Status : <span class="badge text-bg-secondary">{{item.status}}</span></p>
                   <p class="card-text">Expected competion date: {{item.exp_end_date}}</p>
-                  <a href="#" class="btn btn-primary">View more</a>
+                  <a href="{% url 'task-detail' item.pk %}" class="btn btn-primary">View more</a>
                 </div>
               </div>
             </li>
