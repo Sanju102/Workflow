@@ -10,12 +10,22 @@ from django.db.models import Q
 def mytask(request):
     if request.user.is_authenticated:
         search_term = request.GET.get('search')
+        status = request.GET.get('status')
+        priority = request.GET.get('priority')
+        only_delayed = request.GET.get('only_delayed')
         creator = User.objects.get(username=request.user.username)
         tasks = Task.objects.filter(creator=creator)
         if search_term:
                 tasks = tasks.filter(Q(title__icontains=search_term) |  Q(description__icontains=search_term))
 
+        if only_delayed:
+            # If 'Only Delayed' checkbox is checked, filter only delayed tasks
+            tasks = tasks.filter(Q(exp_end_date__lt=timezone.now()))
         # Get the current timezone-aware datetime
+        if status:
+            tasks=tasks.filter(Q(status=status))
+        if priority:
+            tasks=tasks.filter(Q(priority=priority))
         now = timezone.now()
 
         for task in tasks:
