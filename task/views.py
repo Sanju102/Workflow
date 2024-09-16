@@ -4,12 +4,16 @@ from .models import Task
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_protect
 from django.utils import timezone
+from django.db.models import Q
 
 @csrf_protect
 def mytask(request):
     if request.user.is_authenticated:
+        search_term = request.GET.get('search')
         creator = User.objects.get(username=request.user.username)
         tasks = Task.objects.filter(creator=creator)
+        if search_term:
+                tasks = tasks.filter(Q(title__icontains=search_term) |  Q(description__icontains=search_term))
 
         # Get the current timezone-aware datetime
         now = timezone.now()
@@ -30,6 +34,7 @@ def mytask(request):
             else:
                 task.priority_tag = 'primary'  # Bootstrap primary (blue)
         # Render the tasks with the calculated task_status in the template
+
         return render(request, 'mytask.html', {'tasks': tasks})
 
     return redirect('login')
