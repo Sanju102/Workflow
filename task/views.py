@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_protect
 from django.utils import timezone
 from django.db.models import Q
+from notification.models import Notification
 
 @csrf_protect
 def mytask(request):
@@ -15,6 +16,19 @@ def mytask(request):
         only_delayed = request.GET.get('only_delayed')
         creator = User.objects.get(username=request.user.username)
         tasks = Task.objects.filter(creator=creator)
+        not_tasks = Task.objects.exclude(status="Completed")
+        for task in not_tasks:
+                if Notification.objects.filter(des_id=task.id, type='task_delayed').exists():
+                    pass
+                else:
+                    Notification.objects.create(
+                    owner=task.creator,
+                    type="task_delayed",
+                    status="unseen",
+                    message="Task "+task.title+" has been delayed",
+                    des_id=task.id,
+                    url="task-detail"
+                )
         if search_term:
                 tasks = tasks.filter(Q(title__icontains=search_term) |  Q(description__icontains=search_term))
 
@@ -29,12 +43,20 @@ def mytask(request):
         now = timezone.now()
 
         for task in tasks:
-            if task.exp_end_date and task.exp_end_date < now:
-                task.task_status = 'Delayed'
-                task.task_status_tag="danger"
+            if task.status=="Completed":
+                if task.exp_end_date and task.exp_end_date < task.completed_on:
+                    task.task_status = 'Delayed'
+                    task.task_status_tag="danger"
+                else:
+                    task.task_status = 'On Time'
+                    task.task_status_tag="success"
             else:
-                task.task_status = 'On Time'
-                task.task_status_tag="success"
+                if task.exp_end_date and task.exp_end_date < now:
+                    task.task_status = 'Delayed'
+                    task.task_status_tag="danger"
+                else:
+                    task.task_status = 'On Time'
+                    task.task_status_tag="success"
             
             # Task priority tag based on the priority level
             if task.priority == 'High':
@@ -44,8 +66,9 @@ def mytask(request):
             else:
                 task.priority_tag = 'primary'  # Bootstrap primary (blue)
         # Render the tasks with the calculated task_status in the template
-
-        return render(request, 'mytask.html', {'tasks': tasks})
+        notifications=Notification.objects.filter(owner=creator).order_by('-created_on')
+        unseen_notification=notifications.filter(Q(status='unseen')).count()
+        return render(request, 'mytask.html', {'tasks': tasks,"notification":{"count":unseen_notification,"data":notifications}})
 
     return redirect('login')
 
@@ -54,13 +77,38 @@ def taskdetails(request, pk):
         # Use get_object_or_404 to fetch the task or return a 404 error if it doesn't exist
         task = get_object_or_404(Task, pk=pk)
         now = timezone.now()
+        creator = User.objects.get(username=request.user.username)
+        tasks = Task.objects.filter(creator=creator)
+        notification_task = Task.objects.exclude(status="Completed")
+        for task in notification_task:
+            if Notification.objects.filter(des_id=task.id, type='task_delayed').exists():
+                pass
+            else:
+                Notification.objects.create(
+                    owner=task.creator,
+                    type="task_delayed",
+                    status="unseen",
+                    message="Task "+task.title+" has been delayed.",
+                    des_id=task.id,
+                    url="task-detail"
+                )
+        notifications=Notification.objects.filter(owner=creator).order_by('-created_on')
+        unseen_notification=notifications.filter(Q(status='unseen')).count()
 
-        if task.exp_end_date and task.exp_end_date < now:
-            task.task_status = 'Delayed'
-            task.task_status_tag="danger"
+        if task.status=="Completed":
+            if task.exp_end_date and task.exp_end_date < task.completed_on:
+                task.task_status = 'Delayed'
+                task.task_status_tag="danger"
+            else:
+                task.task_status = 'On Time'
+                task.task_status_tag="success"
         else:
-            task.task_status = 'On Time'
-            task.task_status_tag="success"
+            if task.exp_end_date and task.exp_end_date < now:
+                task.task_status = 'Delayed'
+                task.task_status_tag="danger"
+            else:
+                task.task_status = 'On Time'
+                task.task_status_tag="success"
         
         # Task priority tag based on the priority level
         if task.priority == 'High':
@@ -78,12 +126,29 @@ def taskdetails(request, pk):
             task.status_tag = 'success'  # Bootstrap warning (yellow)
         else:
             task.status_tag = 'primary'  # Bootstrap primary (blue)
-        return render(request, 'taskview.html', {'task': task})
+        return render(request, 'taskview.html', {'task': task, "notification":{"count":unseen_notification,"data":notifications}})
     return redirect('login')
 
 @csrf_protect
 def task_create(request):
     if request.user.is_authenticated:
+        creator = User.objects.get(username=request.user.username)
+        tasks = Task.objects.filter(creator=creator)
+        notification_task = Task.objects.exclude(status="Completed")
+        for task in notification_task:
+            if Notification.objects.filter(des_id=task.id, type='task_delayed').exists():
+                pass
+            else:
+                Notification.objects.create(
+                    owner=task.creator,
+                    type="task_delayed",
+                    status="unseen",
+                    message="Task "+task.title+" has been delayed.",
+                    des_id=task.id,
+                    url="task-detail"
+                )
+        notifications=Notification.objects.filter(owner=creator).order_by('-created_on')
+        unseen_notification=notifications.filter(Q(status='unseen')).count()
         if request.method=='POST':
             creator = User.objects.get(username=request.user.username)
             assign_to = [request.user.username]
@@ -106,7 +171,7 @@ def task_create(request):
             return redirect('homepage')
         
         users = User.objects.all()  # Get all users
-        return render(request, 'create_task.html', {'users': users})
+        return render(request, 'create_task.html', {'users': users, "notification":{"count":unseen_notification,"data":notifications}})
 
 @csrf_protect   
 def delete_task(request, pk):
@@ -117,6 +182,23 @@ def delete_task(request, pk):
 @csrf_protect   
 def update_task(request, pk):
     if request.user.is_authenticated:
+        creator = User.objects.get(username=request.user.username)
+        tasks = Task.objects.filter(creator=creator)
+        notification_task = Task.objects.exclude(status="Completed")
+        for task in notification_task:
+            if Notification.objects.filter(des_id=task.id, type='task_delayed').exists():
+                pass
+            else:
+                Notification.objects.create(
+                    owner=task.creator,
+                    type="task_delayed",
+                    status="unseen",
+                    message="Task "+task.title+" has been delayed.",
+                    des_id=task.id,
+                    url="task-detail"
+                )
+        notifications=Notification.objects.filter(owner=creator).order_by('-created_on')
+        unseen_notification=notifications.filter(Q(status='unseen')).count()
         task = Task.objects.get(pk=pk)
         if request.method=='POST':
             now = timezone.now()
@@ -134,4 +216,4 @@ def update_task(request, pk):
             return redirect('my-task')
         
           # Get all users
-        return render(request, 'update_task.html', {'task': task})
+        return render(request, 'update_task.html', {'task': task, "notification":{"count":unseen_notification,"data":notifications}})

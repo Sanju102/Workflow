@@ -19,10 +19,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link" href="{% url 'homepage' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'my-task' %}">My Tasks</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'my-task' %}">My Tasks</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -49,15 +49,25 @@
             <span class="material-symbols-outlined">
               notifications
               </span>
+              {% if notification.count > 0 %}
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                99+
+                {{notification.count}}
                 <span class="visually-hidden">unread messages</span>
               </span>
+              {% endif %}
           </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Action two</a></li>
-            <li><a class="dropdown-item" href="#">Action three</a></li>
+          <ul class="dropdown-menu dropdown-menu-end">
+            {% for item in notification.data %}
+            {% if item.status == 'unseen' %}
+            <li>
+                <a class="dropdown-item" href="{% url 'check-notification' item.id %}" style="background-color: rgba(0, 0, 255, 0.15);">
+                    {{ item.message }}
+                </a>
+            </li>
+            {% else %}
+            <li><a class="dropdown-item" href="{% url 'check-notification' item.id %}">{{item.message}}</a></li>
+            {% endif %}
+            {% endfor %}
           </ul>
         </div>
       </div>

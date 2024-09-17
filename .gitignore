@@ -11,3 +11,5 @@ staticfiles/
 # Virtual environment
 .env/
 env
+
+migrations

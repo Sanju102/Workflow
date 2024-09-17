@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('user.urls')),
     path('task/', include('task.urls')),
+    path('notifications/', include('notification.urls')),
     path('', homepage, name='homepage'),
 ]
