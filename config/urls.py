@@ -24,4 +24,5 @@ urlpatterns = [
     path('task/', include('task.urls')),
     path('notifications/', include('notification.urls')),
     path('', homepage, name='homepage'),
+    path('api/user/', include('api.user.urls')),
 ]

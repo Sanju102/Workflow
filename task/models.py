@@ -13,3 +13,4 @@ class Task(models.Model):
     title=models.CharField(max_length=200)
     description=models.CharField(max_length=1000)
     exp_end_date=models.DateTimeField()
+    notes = models.TextField(blank=True, null=True)

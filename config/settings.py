@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'user',
     'task',
     'notification',
+    'api',
+    'rest_framework.authtoken'
     # 'django_crontab',  # Remove or comment out this line
 ]
 

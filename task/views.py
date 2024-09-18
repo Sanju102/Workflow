@@ -6,6 +6,9 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils import timezone
 from django.db.models import Q
 from notification.models import Notification
+import logging
+
+logger = logging.getLogger(__name__)
 
 @csrf_protect
 def mytask(request):
@@ -165,3 +168,36 @@ def update_task(request, pk):
         
           # Get all users
         return render(request, 'update_task.html', {'task': task, "notification":{"count":unseen_notification,"data":notifications}})
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_protect
+import json
+from django.utils.html import strip_tags
+
+@require_POST
+@csrf_protect
+def save_notes(request, task_id):
+    logger.info(f"save_notes called for task_id: {task_id}")
+    if request.user.is_authenticated:
+        try:
+            task = get_object_or_404(Task, pk=task_id, creator=request.user)
+            data = json.loads(request.body)
+            notes = data.get('notes', '')
+            
+            logger.info(f"Received notes for task {task_id}: {notes[:50]}...")
+            
+            # Sanitize the input
+            allowed_tags = ['br', 'p', 'strong', 'em', 'u', 'ol', 'ul', 'li']
+            sanitized_notes = strip_tags(notes, allowed_tags)
+            
+            task.notes = sanitized_notes
+            task.save()
+            logger.info(f"Saved notes for task {task_id}")
+            return JsonResponse({'status': 'success', 'message': 'Notes saved successfully'})
+        except Exception as e:
+            logger.error(f"Error saving notes for task {task_id}: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    else:
+        logger.warning(f"Unauthenticated user tried to save notes for task {task_id}")
+        return JsonResponse({'status': 'error', 'message': 'User not authenticated'}, status=403)
