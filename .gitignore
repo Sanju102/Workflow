@@ -13,3 +13,5 @@ staticfiles/
 env
 
 migrations
+
+debug.log

@@ -10,18 +10,6 @@ def homepage(request):
         creator = User.objects.get(username=request.user.username)
         tasks=Task.objects.filter(creator=creator)
         notification_task=tasks.exclude(status='Completed')
-        for task in notification_task:
-            if Notification.objects.filter(des_id=task.id, type='task_delayed').exists():
-                pass
-            else:
-                Notification.objects.create(
-                    owner=task.creator,
-                    type="task_delayed",
-                    status="unseen",
-                    message="Task "+task.title+" has been delayed.",
-                    des_id=task.id,
-                    url="task-detail"
-                )
         notifications=Notification.objects.filter(owner=creator).order_by('-created_on')
         unseen_notification=notifications.filter(Q(status='unseen')).count()
         open_task=tasks.filter(Q(status="To do") | Q(status="Ongoing")).count()

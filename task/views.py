@@ -16,19 +16,6 @@ def mytask(request):
         only_delayed = request.GET.get('only_delayed')
         creator = User.objects.get(username=request.user.username)
         tasks = Task.objects.filter(creator=creator)
-        not_tasks = Task.objects.exclude(status="Completed")
-        for task in not_tasks:
-                if Notification.objects.filter(des_id=task.id, type='task_delayed').exists():
-                    pass
-                else:
-                    Notification.objects.create(
-                    owner=task.creator,
-                    type="task_delayed",
-                    status="unseen",
-                    message="Task "+task.title+" has been delayed",
-                    des_id=task.id,
-                    url="task-detail"
-                )
         if search_term:
                 tasks = tasks.filter(Q(title__icontains=search_term) |  Q(description__icontains=search_term))
 
@@ -79,19 +66,6 @@ def taskdetails(request, pk):
         now = timezone.now()
         creator = User.objects.get(username=request.user.username)
         tasks = Task.objects.filter(creator=creator)
-        notification_task = Task.objects.exclude(status="Completed")
-        for task in notification_task:
-            if Notification.objects.filter(des_id=task.id, type='task_delayed').exists():
-                pass
-            else:
-                Notification.objects.create(
-                    owner=task.creator,
-                    type="task_delayed",
-                    status="unseen",
-                    message="Task "+task.title+" has been delayed.",
-                    des_id=task.id,
-                    url="task-detail"
-                )
         notifications=Notification.objects.filter(owner=creator).order_by('-created_on')
         unseen_notification=notifications.filter(Q(status='unseen')).count()
 
@@ -134,19 +108,6 @@ def task_create(request):
     if request.user.is_authenticated:
         creator = User.objects.get(username=request.user.username)
         tasks = Task.objects.filter(creator=creator)
-        notification_task = Task.objects.exclude(status="Completed")
-        for task in notification_task:
-            if Notification.objects.filter(des_id=task.id, type='task_delayed').exists():
-                pass
-            else:
-                Notification.objects.create(
-                    owner=task.creator,
-                    type="task_delayed",
-                    status="unseen",
-                    message="Task "+task.title+" has been delayed.",
-                    des_id=task.id,
-                    url="task-detail"
-                )
         notifications=Notification.objects.filter(owner=creator).order_by('-created_on')
         unseen_notification=notifications.filter(Q(status='unseen')).count()
         if request.method=='POST':
@@ -184,19 +145,6 @@ def update_task(request, pk):
     if request.user.is_authenticated:
         creator = User.objects.get(username=request.user.username)
         tasks = Task.objects.filter(creator=creator)
-        notification_task = Task.objects.exclude(status="Completed")
-        for task in notification_task:
-            if Notification.objects.filter(des_id=task.id, type='task_delayed').exists():
-                pass
-            else:
-                Notification.objects.create(
-                    owner=task.creator,
-                    type="task_delayed",
-                    status="unseen",
-                    message="Task "+task.title+" has been delayed.",
-                    des_id=task.id,
-                    url="task-detail"
-                )
         notifications=Notification.objects.filter(owner=creator).order_by('-created_on')
         unseen_notification=notifications.filter(Q(status='unseen')).count()
         task = Task.objects.get(pk=pk)
