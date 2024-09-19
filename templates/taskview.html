@@ -132,17 +132,26 @@
             <span>Priority: </span><span class="badge text-bg-{{ task.priority_tag }}">{{ task.priority }}</span><br>
             <span>Status: </span><span class="badge text-bg-{{ task.status_tag }}">{{ task.status }}</span>
 
+            <!-- Add this new section for notes -->
+            <div class="mt-4">
+                <h4>Notes</h4>
+                <div id="notes-display" class="editable-content mb-2" contenteditable="true" data-placeholder="Add your notes here...">{{ task.notes|default_if_none:"" }}</div>
+                <button id="save-notes-btn" class="btn btn-primary">Save Notes</button>
+            </div>
+
             <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const notesDisplay = document.getElementById('notes-display');
+                const saveNotesBtn = document.getElementById('save-notes-btn');
                 let lastSavedContent = notesDisplay.innerHTML;
 
-                notesDisplay.addEventListener('input', function() {
+                saveNotesBtn.addEventListener('click', function() {
                     const currentContent = notesDisplay.innerHTML;
                     if (currentContent !== lastSavedContent) {
-                        console.log('Content changed, saving notes:', currentContent);
+                        console.log('Saving notes:', currentContent);
                         saveNotes(currentContent);
-                        lastSavedContent = currentContent;
+                    } else {
+                        console.log('No changes to save');
                     }
                 });
 
@@ -162,12 +171,16 @@
                         console.log('Server response:', data);
                         if (data.status === 'success') {
                             console.log('Notes saved successfully');
+                            lastSavedContent = notes;
+                            alert('Notes saved successfully');
                         } else {
                             console.error('Error saving notes:', data.message);
+                            alert('Error saving notes: ' + data.message);
                         }
                     })
                     .catch(error => {
                         console.error('Error saving notes:', error);
+                        alert('Error saving notes: ' + error);
                     });
                 }
             });
